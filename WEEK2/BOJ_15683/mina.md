@@ -2,7 +2,7 @@
 
 # **🔒Problem**
 
-> [문제번호 15683 감시](https://www.acmicpc.net/problem/15683)
+> [BOJ 15683 감시](https://www.acmicpc.net/problem/15683)
 
 <br>
 <br>
