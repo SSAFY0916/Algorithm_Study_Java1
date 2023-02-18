@@ -62,7 +62,7 @@ public class Main {
 		bw.close();
 	}
 
-    //1개의 cctv가 가질 수 있는 방향은 4개이므로(0,1,2,3) 백트래킹으로 중복조합 계산
+    //1개의 cctv가 가질 수 있는 방향은 4개이므로(0,1,2,3) 중복조합 계산
 	static void backtracking(int count) {
 		if (count == cctvCount) {
             // 중복조합 하나 완성 될때마다 cctv 돌려보기
