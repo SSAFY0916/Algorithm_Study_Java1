@@ -99,7 +99,9 @@ public class Main {
 
 # **📑Related Issues**
 
-> priority queue를 적절하게 이용해서 그리디를 풀었어야 했는데 진짜 생각이 너무 너무 안났다 관련 문제 찾아서 더 풀어보쟈...
+> priority queue를 적절하게 이용해서 그리디를 풀었어야 했는데 진짜 생각이 너무 너무 안났다\
+> Description에 있는 아이디어로 구현 했었다가 Priority queue 정렬할 때 실수로 startTime, endTime 둘 다 고려하여 정렬해버려서 이것도 또 삽질했다.... endTime으로만 정렬하면 됨 바보바보바보\
+> 관련 문제 찾아서 더 연습하쟈...
 
 <br>
 <br>
