@@ -57,7 +57,7 @@ public class Main {
 	        	union[i] = i; // 초기엔 자기 자신을 저장
         }
         int answer = 0;
-        for(int i=0; i<n-1; i++) { // 프림
+        for(int i=0; i<n-1; i++) { // 크러스컬
             Edge edge;
             int left_root = -1;
             int right_root = -1;
