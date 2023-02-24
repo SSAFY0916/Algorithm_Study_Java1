@@ -14,6 +14,7 @@ package bj_12100_2048easy;
 //설계시작=10:50
 //설계종료=14:15
 //구현종료=15:50
+//
 import java.io.*;
 import java.util.StringTokenizer;
 
