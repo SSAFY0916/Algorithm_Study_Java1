@@ -10,8 +10,6 @@
 # **Code**
 
 ```java
-package bj_ㅠ파볼;
-
 //package daily.y_2023.m_02.d_21.bj_파이어볼;
 
 import java.util.ArrayList;
