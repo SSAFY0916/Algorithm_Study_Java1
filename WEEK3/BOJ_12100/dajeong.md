@@ -154,6 +154,6 @@ public class Main {
 
 # **🕛Resource**
 
-| Memory | Time  | Implementation Time |
-| -- |-------|---------------------|
+| Memory | Time   | Implementation Time |
+| ------ | ------ |---------------------|
 | 59688KB | 320ms | 3 Hour 0 Minutes    |
