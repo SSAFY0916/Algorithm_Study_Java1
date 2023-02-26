@@ -41,7 +41,7 @@ public class Main {
 		bw.close();
 	}
 
-    //4가지 방향 5개로 중복조합
+	// 4가지 방향 5개로 중복조합
 	static void combination(int count) throws IOException {
 
 		if (count == 5) {
@@ -65,48 +65,47 @@ public class Main {
 		for (int i = 0; i < 5; i++) {
 			if (selected[i] == 0) {// 오른쪽으로 밀기
 				for (int j = 0; j < N; j++) {
-					for (int k = N - 2; k >= 0; k--) {  // right to left, top to bottom 순서로 숫자 체크하면서 밀기
-						int idx = k + 1;    //벽이나 그 다음 숫자 찾는 index
-						if (boardCopy[j][k] != 0) {
-							while (boardCopy[j][k] != 0) {
-								if (boardCopy[j][k] == boardCopy[j][idx]) { // 겹칠 수 있음
-									boardCopy[j][idx] = -2 * boardCopy[j][idx]; // 이미 겹친건 음수로 표시해서 여러번 못겹치게 하기
-									boardCopy[j][k] = 0;
-									break;
-								} else if (boardCopy[j][idx] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기 
-									int temp = boardCopy[j][k];
-									boardCopy[j][k] = 0;
-									boardCopy[j][idx - 1] = temp;
-									break;
-								}
-								if (idx == N - 1) { //벽에 도달 -> 벽끝까지 숫자 밀기
-									boardCopy[j][idx] = boardCopy[j][k];
-									boardCopy[j][k] = 0;
-									break;
-								}
-								idx++;
+					for (int k = N - 2; k >= 0; k--) { // right to left, top to bottom 순서로 숫자 체크하면서 밀기
+						int idx = k + 1; // 벽이나 그 다음 숫자 찾는 index
+						while (boardCopy[j][k] != 0) {
+							if (boardCopy[j][k] == boardCopy[j][idx]) { // 겹칠 수 있음
+								boardCopy[j][idx] = -2 * boardCopy[j][idx]; // 이미 겹친건 음수로 표시해서 여러번 못겹치게 하기
+								boardCopy[j][k] = 0;
+								break;
+							} else if (boardCopy[j][idx] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기
+								int temp = boardCopy[j][k];
+								boardCopy[j][k] = 0;
+								boardCopy[j][idx - 1] = temp;
+								break;
 							}
+							if (idx == N - 1) { // 벽에 도달 -> 벽끝까지 숫자 밀기
+								boardCopy[j][idx] = boardCopy[j][k];
+								boardCopy[j][k] = 0;
+								break;
+							}
+							idx++;
 						}
+
 					}
 				}
 
 			} else if (selected[i] == 1) { // 아래쪽으로 밀기
 				for (int j = N - 2; j >= 0; j--) {
-					for (int k = 0; k < N; k++) {   // left to right, bottom to top 순서로 숫자 체크하면서 밀기
-						int idx = j + 1;    //벽이나 그 다음 숫자 찾는 index
+					for (int k = 0; k < N; k++) { // left to right, bottom to top 순서로 숫자 체크하면서 밀기
+						int idx = j + 1; // 벽이나 그 다음 숫자 찾는 index
 						while (boardCopy[j][k] != 0) {
 							if (boardCopy[idx][k] == boardCopy[j][k]) { // 겹칠 수 있음
 								boardCopy[idx][k] = -2 * boardCopy[idx][k]; // 이미 겹친건 음수로 표시해서 여러번 못겹치게 하기
 								boardCopy[j][k] = 0;
 								break;
-							} else if (boardCopy[idx][k] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기 
+							} else if (boardCopy[idx][k] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기
 								int temp = boardCopy[j][k];
 								boardCopy[j][k] = 0;
 								boardCopy[idx - 1][k] = temp;
 								break;
 							}
 
-							if (idx == N - 1) { //벽에 도달 -> 벽끝까지 숫자 밀기
+							if (idx == N - 1) { // 벽에 도달 -> 벽끝까지 숫자 밀기
 								boardCopy[idx][k] = boardCopy[j][k];
 								boardCopy[j][k] = 0;
 								break;
@@ -117,21 +116,21 @@ public class Main {
 				}
 			} else if (selected[i] == 2) {// 왼쪽으로 밀기
 				for (int j = 0; j < N; j++) {
-					for (int k = 1; k < N; k++) {   // left to right, top to bottom 순서로 숫자 체크하면서 밀기
-						int idx = k - 1;    //벽이나 그 다음 숫자 찾는 index
+					for (int k = 1; k < N; k++) { // left to right, top to bottom 순서로 숫자 체크하면서 밀기
+						int idx = k - 1; // 벽이나 그 다음 숫자 찾는 index
 						while (boardCopy[j][k] != 0) {
 							if (boardCopy[j][k] == boardCopy[j][idx]) { // 겹칠 수 있음
 								boardCopy[j][idx] = -2 * boardCopy[j][idx]; // 이미 겹친건 음수로 표시해서 여러번 못겹치게 하기
 								boardCopy[j][k] = 0;
 								break;
-							} else if (boardCopy[j][idx] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기 
+							} else if (boardCopy[j][idx] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기
 								int temp = boardCopy[j][k];
 								boardCopy[j][k] = 0;
 								boardCopy[j][idx + 1] = temp;
 								break;
 							}
 
-							if (idx == 0) { //벽에 도달 -> 벽끝까지 숫자 밀기
+							if (idx == 0) { // 벽에 도달 -> 벽끝까지 숫자 밀기
 								boardCopy[j][idx] = boardCopy[j][k];
 								boardCopy[j][k] = 0;
 								break;
@@ -143,14 +142,14 @@ public class Main {
 				}
 			} else if (selected[i] == 3) {// 위쪽으로 밀기
 				for (int j = 1; j < N; j++) {
-					for (int k = 0; k < N; k++) {   // left to right, top to bottom 순서로 숫자 체크하면서 밀기
-						int idx = j - 1;    //벽이나 그 다음 숫자 찾는 index
+					for (int k = 0; k < N; k++) { // left to right, top to bottom 순서로 숫자 체크하면서 밀기
+						int idx = j - 1; // 벽이나 그 다음 숫자 찾는 index
 						while (boardCopy[j][k] != 0) {
 							if (boardCopy[idx][k] == boardCopy[j][k]) { // 겹칠 수 있음
 								boardCopy[idx][k] = -2 * boardCopy[idx][k]; // 이미 겹친건 음수로 표시해서 여러번 못겹치게 하기
 								boardCopy[j][k] = 0;
 								break;
-							} else if (boardCopy[idx][k] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기 
+							} else if (boardCopy[idx][k] != 0) { // 다른 숫자라 겹칠 수 없음 -> 그 숫자 직전까지 밀기
 								int temp = boardCopy[j][k];
 								boardCopy[j][k] = 0;
 								boardCopy[idx + 1][k] = temp;
@@ -171,7 +170,7 @@ public class Main {
 
 			for (int j = 0; j < N; j++) {
 				for (int k = 0; k < N; k++) {
-                    //음수로 표시한거 돌려놓기
+					// 음수로 표시한거 돌려놓기
 					boardCopy[j][k] = Math.abs(boardCopy[j][k]);
 				}
 			}
@@ -180,7 +179,7 @@ public class Main {
 		count();
 	}
 
-	static void count() {   //최댓값 찾기
+	static void count() { // 최댓값 찾기
 		for (int j = 0; j < N; j++) {
 			for (int k = 0; k < N; k++) {
 				max = Math.max(max, boardCopy[j][k]);
