@@ -78,7 +78,7 @@ public class Main {
 
 	static void dfs(int count) {
 
-		if (count == N + 1) {\
+		if (count == N + 1) {
 			Arrays.fill(vistiedBFS, false);	// 방문 배열 초기화
 
 			int A = 0, B = 0;	// 두 선거구 인구 수
