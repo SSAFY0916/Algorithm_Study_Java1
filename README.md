@@ -37,6 +37,7 @@ WEEK1 / BOJ_9999 / name
 | WEEK1  | [적록색약](https://www.acmicpc.net/problem/10026) | [집합의 표현](https://www.acmicpc.net/problem/1717) | [성냥개비](https://www.acmicpc.net/problem/3687) | [포도주 시식](https://www.acmicpc.net/problem/2156) | [공주님의 정원](https://www.acmicpc.net/problem/2457) |
 | WEEK2  | [강의실 배정](https://www.acmicpc.net/problem/11000) | [꿀 따기](https://www.acmicpc.net/problem/21758) | [감시](https://www.acmicpc.net/problem/15683) | [행성 터널](https://www.acmicpc.net/problem/2887) | [공유기 설치](https://www.acmicpc.net/problem/2110) |
 | WEEK3  | [다리 만들기](https://www.acmicpc.net/problem/2146) | [2048 (Easy)](https://www.acmicpc.net/problem/12100) | [마법사 상어와 파이어볼](https://www.acmicpc.net/problem/20056) | [줄 세우기](https://www.acmicpc.net/problem/2252) | [주사위 굴리기 2](https://www.acmicpc.net/problem/23288) |
+| WEEK4  | [게리맨더링](https://www.acmicpc.net/problem/17471) | [⚾](https://www.acmicpc.net/problem/17281) | [상어 중학교](https://www.acmicpc.net/problem/21609) | [퇴사 2](https://www.acmicpc.net/problem/15486) | [사다리 조작](https://www.acmicpc.net/problem/15684) |
 
 
 ### Git 순서
