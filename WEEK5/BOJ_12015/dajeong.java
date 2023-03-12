@@ -25,7 +25,6 @@ public class dajeong {
             } else { // 타겟이 마지막값보다 작거나 같을경우, 이분탐색으로 대체할 위치 찾기 (타겟값보다 큰 값중 가장 가까운 값)
                 int lt = 0;
                 int rt = lastIdx;
-                int mid = (lt+rt)/2;
 
                 while(lt<rt) {
                     mid = (lt+rt)/2;
