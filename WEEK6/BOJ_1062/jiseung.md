@@ -45,6 +45,7 @@ public class Main {
 		bw.flush();
 		bw.close();
 		br.close();
+		return;
 	}
 
 	// 가르칠 알파벳의 조합을 만듦
