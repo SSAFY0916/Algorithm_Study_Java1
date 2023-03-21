@@ -40,6 +40,7 @@ WEEK1 / BOJ_9999 / name
 | WEEK4  | [게리맨더링](https://www.acmicpc.net/problem/17471) | [⚾](https://www.acmicpc.net/problem/17281) | [상어 중학교](https://www.acmicpc.net/problem/21609) | [퇴사 2](https://www.acmicpc.net/problem/15486) | [사다리 조작](https://www.acmicpc.net/problem/15684) |
 | WEEK5  | [사회망 서비스(SNS)](https://www.acmicpc.net/problem/2533) | [말이 되고픈 원숭이](https://www.acmicpc.net/problem/1600) | [가장 긴 증가하는 부분수열 2](https://www.acmicpc.net/problem/12015) | [파일 합치기](https://www.acmicpc.net/problem/11066) | [회사 문화 1](https://www.acmicpc.net/problem/14267) |
 | WEEK6  | [가르침](https://www.acmicpc.net/problem/1062) | [소문난 칠공주](https://www.acmicpc.net/problem/1941) | [Maaaaaaaaaze](https://www.acmicpc.net/problem/16985) | [비밀 모임](https://www.acmicpc.net/problem/13424) | [나머지 합](https://www.acmicpc.net/problem/10986) |
+| WEEK7  | [어른 상어](https://www.acmicpc.net/problem/19237) | [멀티탭 스케줄링](https://www.acmicpc.net/problem/1700) | [욕심쟁이 판다](https://www.acmicpc.net/problem/1937) | [N-Queen](https://www.acmicpc.net/problem/9663) | [K번째 수](https://www.acmicpc.net/problem/1300) |
 
 ### Git 순서
 
