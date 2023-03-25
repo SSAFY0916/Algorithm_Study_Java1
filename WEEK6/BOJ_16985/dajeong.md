@@ -1,3 +1,15 @@
+![header](https://capsule-render.vercel.app/api?type=waving&height=200&color=0:B2E6FF,100:FFB2D6&text=BOJ%2016985&fontColor=FFFFFF&fontAlign=80&fontAlignY=35&fontSize=50)
+
+# **🔒Problem**
+
+> [BOJ 16985 Maaaaaaaaaze](https://www.acmicpc.net/problem/16985)
+
+<br>
+<br>
+
+# **Code**
+
+```java
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +19,7 @@ import java.util.StringTokenizer;
 
 // BOJ 16985 Maaaaaaaaaze
 public class Main {
+
     static int[][][] boardList, selectedBoard, simulBoard, dist; // z,x,y
     static boolean[][][] vis; // bfs 방문 배열
     static boolean[] checkSelected;
@@ -17,12 +30,6 @@ public class Main {
     static int[] diy = {0, 0, 1, -1, 0, 0}; // 상하좌우위아래 y좌표
 
     public static void main(String[] args) throws IOException {
-        // 중복여부와 상관없이 일단 보드 5개를 보드 리스트에 저장
-        // 보드를 5개 고르기!!! <- 이걸 안함
-        // 4^5 만큼의 회전 경우의 수를 (0,1,2,3) 구하고 회전 => 시뮬레이션용 새 3차원 배열에 저장
-        // 시뮬레이션용 배열의 첫 보드에서 갈 수 있는 값 중 임의의 좌표 입구를 고르기 (5*5)
-        // 입구에 따른 출구(갈 수 있는값, 입구와 면을 공유하지 않는 꼭짓점) 구하기
-        // 입구에서 출구까지 가는 bfs 수행 (최소 거리)
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
@@ -60,16 +67,17 @@ public class Main {
     }
 
     private static void selectBoardDfs(int cnt) {
-        if (cnt==5) {
+        if (cnt == 5) {
             simulation();
             return;
         }
 
         for (int i = 0; i < 5; i++) {
-            if (checkSelected[i]) continue;
+            if (checkSelected[i])
+                continue;
             checkSelected[i] = true;
             selectedBoard[cnt] = boardList[i];
-            selectBoardDfs(cnt+1);
+            selectBoardDfs(cnt + 1);
             checkSelected[i] = false;
         }
 
@@ -90,7 +98,7 @@ public class Main {
             }
 
             // 회전하기 때문에, 임의의 시작점(입구)라는 조건이 있어도 한 점만 확인해도 가능하다!
-            if (simulBoard[0][0][0] == 1 && simulBoard[4][4][4]==1) {
+            if (simulBoard[0][0][0] == 1 && simulBoard[4][4][4] == 1) {
                 // bfs 최소 탐색 거리 저장 배열 갱신
                 dist = new int[5][5][5];
                 // bfs 방문배열 갱신
@@ -99,7 +107,8 @@ public class Main {
                 bfs();
                 int d = dist[4][4][4];
 
-                if (d != 0) minCnt = Math.min(minCnt, d); // 최소거리가 0이 아닌 경우 (이동 가능한 경우) 최솟값 갱신
+                if (d != 0)
+                    minCnt = Math.min(minCnt, d); // 최소거리가 0이 아닌 경우 (이동 가능한 경우) 최솟값 갱신
             }
 
         }
@@ -127,7 +136,8 @@ public class Main {
                 int nZ = diz[i] + curZ;
                 int nX = dix[i] + curX;
                 int nY = diy[i] + curY;
-                if (nZ < 0 || nZ >= 5 || nX < 0 || nX >= 5 || nY < 0 || nY >= 5 || vis[nZ][nX][nY]) continue;
+                if (nZ < 0 || nZ >= 5 || nX < 0 || nX >= 5 || nY < 0 || nY >= 5 || vis[nZ][nX][nY])
+                    continue;
                 if (simulBoard[nZ][nX][nY] == 1) {
                     queue.offer(new int[]{nZ, nX, nY});
                     vis[nZ][nX][nY] = true;
@@ -153,7 +163,6 @@ public class Main {
         return b;
     }
 
-
     // 보드 찍어보는 함수
     private static void printBoard(int[][][] b) {
         for (int i = 0; i < 5; i++) {
@@ -168,3 +177,48 @@ public class Main {
         System.out.println();
     }
 }
+```
+
+<br>
+<br>
+
+# **🔑Description**
+
+> 설계 시간: 며칠
+
+> 구현 시간: ..
+<aside>
+💡 설계 아이디어
+
+     - 중복여부와 상관없이 일단 보드 5개를 보드 리스트에 저장
+     - 순열을 이용하여 보드 순서 정하기 <- 문제이해를 잘못해서 이걸 안했다. 
+     - 4^5 만큼의 회전 경우의 수를 (0,1,2,3) 구하고 회전 => 시뮬레이션용 새 3차원 배열에 저장
+     - bfs 탐색 경우의 수를 줄일 수 있는 방법이 중요한 문제 (회전 관점에서 입구의 경우의 수 1/4로 줄이기)
+
+</aside>
+
+<br>
+<br>
+
+# **📑Related Issues**
+
+> Related Issues
+<aside>
+
+     - 굉장히 오래 잡고 있었던 문제이다..
+     - 실수1) 처음에 문제 이해를 잘못해서 보드의 순서가 입력대로 주어진 것으로 알고 문제를 풀었다. 
+     - 실수2) 부랴부랴 보드 순서를 정해주는 순열을 시행할 때 비트연산으로 풀다가 회전 방향 구하듯이 4로 나눠버렸다.. 
+     - 이건 계속 왜 틀렸는지 못찾다가 다른 사람이 오류 있는 것을 찾아주었는데 쉬운 코드라고 습관적으로 코드를 작성하는 버릇에 대해 반성을 많이 했다.
+     - 시간초과) 문제를 읽고 임의의 입구를 고를 수 있다고 하길래 꼭짓점 4개를 고르고 고른 입구에 따른 출구가 가능한지 확인하는 연산을 수행했었다. 하지만 이렇게 하니 시간초과가 났고, 회전을 4방향 가능하므로 경우의 수를 1/4로 줄일 수 있음을 알게 되었다.
+     - 문제 이해, 실수, 시간초과까지... 시뮬레이션은 아직 어렵다...
+
+</aside>
+
+<br>
+<br>
+
+# **🕛Resource**
+
+| Memory | Time | Implementation Time |
+| -- |-------|---------------------|
+| 301348KB | 1716ms | 며칠.. |
