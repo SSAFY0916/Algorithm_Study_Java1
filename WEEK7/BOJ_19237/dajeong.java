@@ -128,6 +128,7 @@ public class Main_19237_어른상어 {
                     if (newBoard[nx][ny] == 0) {
                         newBoard[nx][ny] = num; // 이동한 위치에 다른 상어가 존재하지 않으면 이동
                         flag = true;
+                        break;
                     } else if (newBoard[nx][ny] > num) { // 상어가 존재하면 더 값이 작은애가 잡아먹기
                         newBoard[nx][ny] = num;
                         cnt--; // 상어 수 -1
@@ -139,8 +140,6 @@ public class Main_19237_어른상어 {
                         break;
                     }
                 }
-                // *** break 범위에 대한 이해가 부족했음. 왜 인텔리제이에서 참조되는 위치는 다를까?
-                if (flag) break;
             }
             if (!flag) { // 이동할 곳이 없다면
                 for (int i = 0; i < 4; i++) {
