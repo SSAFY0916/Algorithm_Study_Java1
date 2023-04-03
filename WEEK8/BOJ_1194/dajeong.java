@@ -1,3 +1,5 @@
+package bfs;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,14 +14,15 @@ public class Main_1194_달이차오른다가자 {
     static boolean[][][] vis;
     static int[] dix = {-1,1, 0, 0};
     static int[] diy = {0, 0, -1, 1};
+    static final int maxKeys = 6;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken()); // 미로 세로 크기 (행)
         M = Integer.parseInt(st.nextToken()); // 미로 가로 크기 (열)
-        map = new char[N][M][(1<<6)+1]; // 열쇠 경우의 수에 따른 이동 가능한 맵 (멀티버스/차원확장)
-        dist = new int[N][M][(1<<6)+1]; // bfs 이동 거리 저장 배열
-        vis = new boolean[N][M][(1<<6)+1]; // bfs 방문 여부 체크 배열
+        map = new char[N][M][1<<maxKeys]; // 열쇠 경우의 수에 따른 이동 가능한 맵 (멀티버스/차원확장)
+        dist = new int[N][M][1<<maxKeys]; // bfs 이동 거리 저장 배열
+        vis = new boolean[N][M][1<<maxKeys]; // bfs 방문 여부 체크 배열
 
         int[] curPos = new int[3];
         for (int r = 0; r < N; r++) {
@@ -69,31 +72,18 @@ public class Main_1194_달이차오른다가자 {
 
                 if ('a' <= target && target <= 'f') { // 열쇠일 경우
                     nk = nk | (1<<(target-'a')); // 취득한 열쇠 플래그 세우기
-                    if (!vis[nx][ny][nk]) {
-                        queue.offer(new int[]{nx,ny,nk});
-                        vis[nx][ny][nk] =true;
-                        dist[nx][ny][nk] = dist[curX][curY][curK]+1;
-                        continue;
-                    }
-                }
-                if ('A' <= target && target <= 'F') { // 문을 만날 경우
-                    if ((nk & (1<<(target-'A'))) != 0) { // 해당 문에 해당하는 키를 가지고 있을 경우
-                        queue.offer(new int[]{nx,ny,nk});
-                        vis[nx][ny][nk] =true;
-                        dist[nx][ny][nk] = dist[curX][curY][curK]+1;
 
-                    } else {
-                        continue;
-                    }
+                } else if ('A' <= target && target <= 'F') { // 문을 만날 경우
+                    // 해당 문에 해당하는 키를 가지고 있지 않을 경우 문을 열 수 없음
+                    if ((nk & (1<<(target-'A'))) == 0)  continue;
                 }
 
-                // '.', '0' 등 이동 가능한 경우 이동
+                // 멀티버스 bfs 수행
                 queue.offer(new int[]{nx,ny,nk});
                 vis[nx][ny][nk] =true;
                 dist[nx][ny][nk] = dist[curX][curY][curK] + 1;
             }
         }
-
         return res;
     }
 }
