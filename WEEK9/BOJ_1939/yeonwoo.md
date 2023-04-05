@@ -1,8 +1,8 @@
-![header](https://capsule-render.vercel.app/api?type=waving&height=200&color=0:B2E6FF,100:FFB2D6&text=BOJ%20N&fontColor=FFFFFF&fontAlign=80&fontAlignY=35&fontSize=50)
+![header](https://capsule-render.vercel.app/api?type=waving&height=200&color=0:B2E6FF,100:FFB2D6&text=BOJ%201939&fontColor=FFFFFF&fontAlign=80&fontAlignY=35&fontSize=50)
 
 # **🔒Problem**
 
-> [BOJ 16985 Maaaaaaaaaze](https://www.acmicpc.net/problem/16985)
+> [BOJ 1939 중량제한](https://www.acmicpc.net/problem/1939)
 
 <br>
 <br>
@@ -10,152 +10,116 @@
 # **Code**
 
 ```java
-//package daily.y_2023.m_03.d_16.bj_16985;
+//package res;
 
 import java.io.*;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Main {
+/*
+크루스칼
+가중치 내림차순 간선 뽑
+간선의 s와 e를 잇는다
+sv와 ev가 이어지면 현재 간선의 weight가 답이다
+*/
+
+
+public class Main{
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
+    static class Edge implements Comparable<Edge>{
+        int s,e,w;//출발 도착 가중
 
-    //
-    static int[][][] map = new int [5][5][5];//
-    static int[][][] copy= new int [5][5][5];//?
+        public Edge(int s, int e, int w){
+            this.s = s;
+            this.e = e;
+            this.w = w;
+        }
 
-
-    static int ans=Integer.MAX_VALUE;
-    static int rotationCnt[] = new int[5];
-    static int order[]= new int[5];//판 쌓는 순서
-    static boolean check[] = new boolean[5];
-
-    static boolean[][][] visit;//bfs용
-    static int dr[] = {-1,1,0,0,0,0};
-    static int dc[] = {0,0,-1,1,0,0};
-    static int dz[] = {0,0,0,0,-1,1};
-
-    static class Node{
-        int r,c,z,cnt;
-        public Node(int r, int c,int z, int cnt){
-            this.r = r;
-            this.c = c;
-            this.z = z;
-            this.cnt = cnt;
+        //가중치 기준 내림차순
+        public int compareTo(Edge o){
+            return o.w-w;
         }
     }
+    static int N;//노드 수
+    static int M;//간선 수
+    static int sv,ev;//시작노드번호 도착노드번호
+
+    //유니온파인드
+    static int[] parent;
+
     public static void main(String[] args) throws IOException{
-        //map에 인풋받기
-        for(int z=0;z<5;z++){
-            for(int r=0;r<5;r++){
-                StringTokenizer st = new StringTokenizer(br.readLine());
-                for(int c=0;c<5;c++){
-                    map[z][r][c] = Integer.parseInt(st.nextToken());
-                }
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());//node
+        M = Integer.parseInt(st.nextToken());//edge
+
+        //Prepare the ingredients for the kruskal
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        for(int i=0;i<M;i++){
+            st = new StringTokenizer(br.readLine());
+            int s = Integer.parseInt(st.nextToken());
+            int e = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+
+            Edge edge = new Edge(s,e,w);
+            pq.offer(edge);
+        }
+
+        //For UnionFind
+        parent = new int[N+1];//Node numbers start at 1
+        //First, register itself as its parent
+        for(int i=1;i<=N;i++){
+            parent[i] = i;
+        }
+
+        //starting & arrival node number
+        st = new StringTokenizer(br.readLine());
+        sv = Integer.parseInt(st.nextToken());
+        ev = Integer.parseInt(st.nextToken());
+
+        int res = kruskal(pq);
+        System.out.println(res);
+
+    }
+    static int kruskal(PriorityQueue<Edge> pq){
+        while(!pq.isEmpty()){
+            Edge cur = pq.poll();
+            int curs = cur.s;
+            int cure = cur.e;
+            int curw = cur.w;
+
+            unionFind(curs,cure);
+            if(find(sv)==find(ev)){
+                return curw;
             }
         }
-        permutation(0);
-        System.out.println(ans==Integer.MAX_VALUE?-1:ans);
+        return -1;//It's never going to here
     }
 
-    //order[]에 판 쌓는 순서 배정
-    static void permutation(int depth){
-        if(depth==5){
-            copy = new int[5][5][5];
-            for(int i=0;i<order.length;i++){
-                setRotation(0);
-            }
-            return;
-        }
-        for(int i=0;i<5;i++){
-            if(!check[i]){//아직 안쓴 판
-                check[i] = true;
-                order[depth] = i;
-                permutation(depth+1);
-                check[i]=false;
-            }
+    static void unionFind(int numA, int numB){
+        int pA = find(numA);
+        int pB = find(numB);
+        //return if numA and numB have the same parent.
+        if(pA ==pB) return;
+
+        union(pA,pB);
+    }
+
+    static int find(int num){
+        //return if num and parent[num] have the same number.
+        if(num==parent[num]) return num;
+        return parent[num] = find(parent[num]);
+    }
+
+    static void union(int pA,int pB){
+        if(pA<pB){
+            parent[pB] = pA;
+        }else{
+            parent[pA] = pB;
         }
     }
 
-    //층별 방향
-    private static void setRotation(int idx){
-        if(idx==5){//5번쨰 판까지 방향 설정 완료
-            for(int i=0;i<order.length;i++){//i번층
-                int pan = order[i];//i번층에 쓸 판
-                int cnt = rotationCnt[i];//i번 층의 회전수
 
-                //최전적용
-                for(int r=0;r<5;r++){//행
-                    for(int c=0;c<5;c++){//열
-                        if(cnt==0) {//이번판 무회전
-                            copy[i][r][c] = map[pan][r][c];
-                        }else if(cnt==1){//1회전
-                            copy[i][c][4-r] = map[pan][r][c];
-                        }else if(cnt==2) {//2회전
-                            copy[i][4-r][4-c] = map[pan][r][c];
-                        }else if(cnt==3){//3회전
-                            copy[i][4-c][r] = map[pan][r][c];
-                        }
-                    }
-                }
-            }
-            if(copy[0][0][0]==1 && copy[4][4][4]==1){
-                int cur = bfs(0,0,0);
-                ans = Math.min(cur,ans);
-
-            }
-            return;
-        }
-        for(int cnt=0;cnt<4;cnt++){
-            rotationCnt[idx] = cnt;
-            setRotation(idx+1);
-        }
-    }
-
-    //최소경로
-    static int bfs(int z, int r, int c){
-        Queue<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{z,r,c});
-        visit = new boolean[5][5][5];
-        visit[z][r][c] = true;
-
-        int turn = -1;
-        while(!q.isEmpty()){
-            turn++;
-            if(turn>ans) return Integer.MAX_VALUE;
-            int size = q.size();
-            while(size-->0){
-                int[] cur = q.poll();
-                int cz = cur[0];
-                int cr = cur[1];
-                int cc = cur[2];
-
-                if(cz==4 && cr==4 && cc==4){
-                    if(turn==12){
-                        System.out.println(12);
-                        System.exit(0);
-                    }
-                    return turn;
-                }
-
-                int nz,nr,nc;
-                for(int d=0;d<6;d++){
-                    nz = cz+dz[d];
-                    nr = cr+dr[d];
-                    nc = cc+dc[d];
-                    if(nz<0 || nr<0 || nc<0 || nz>4 || nr>4 || nc>4) continue;
-                    if(visit[nz][nr][nc]) continue;
-                    if(copy[nz][nr][nc]==0) continue;
-
-                    visit[nz][nr][nc] = true;
-                    q.offer(new int[] {nz,nr,nc});
-
-                }
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
 
 }
 ```
@@ -164,11 +128,20 @@ public class Main {
 <br>
 
 # **🔑Description**
-- 순열: 판의 배치
+- 크루스칼 알고리즘을 이용한 최소신장트리 만들기를 응용하였습니다
 
-- 중복조합: 판의 회전
+  - Comparable을 구현하는 Edge 클래스를 만들고
+  - 가중치 기준 오름차순이 아닌 내림차순으로 정렬되도록 하였습니다
 
-- 순열과 중복조합에 따라 결정된 판의 배치에 대하여 0,0 -> 4,4 bfs탐색진행
+- 가중치가 큰 간선부터 뽑는다
+
+  - 집합이 다른 노드를 연결하는 간선일 때만 두 노드에 대해 union
+  - union이후 출발지와 도착지가 같은 그룹이지 확인하고 같은 그룹이면 이번 간선의 가중치를 리턴합니다
+    - 왜냐면 가중치 기준 내림차순 정렬이기 때문에 출발지-도착지를 잇는 순간의 가중치가 모든 다리 중 가장 약한 다리이기 때문입니다.
+
+  ---
+
+  
 
   
 
@@ -177,15 +150,189 @@ public class Main {
 
 # **📑Related Issues**
 
-> 모두가 같은 횟수로 도는 케이스 제거하려 시도했다가 실패
+> union이후 문제의출발지와 문제의도착지가 같은 집합인지 확인해야하는데
 >
-> 
+> 현재뽑은 노드의 출발지와 도착지가 같은 집합인지 확인해 틀렸습니다.
 
 <br>
 <br>
 
 # **🕛Resource**
 
-| Memory   | Time   | Implementation Time |
-| -------- | ------ | ------------------- |
-| 282100KB | 1752ms |                     |
+| Memory  | Time  | Implementation Time |
+| ------- | ----- | ------------------- |
+| 47476KB | 444ms |                     |
+
+
+
+
+
+---
+
+# 이분탐색
+
+# **Code**
+
+```java
+package bj_1939;
+
+import java.io.*;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
+import java.util.ArrayList;
+/*
+섬은 1번부터 시작
+
+1. static class Edge(end, weight) 생성
+2. 인접리스트로 노드간 연결 표현
+    -하면서 최대하중(max) 확인
+3. 최소하중(1) ~ 최대하중(max)까지 binarySearch하면서 통과 확인
+    - 통과하면 mid+1 ~ right 까지 binarySearch
+    - 통과 못하면 left~mid-1 binarySearch
+4. 통과확인 startNode에서
+binarySearch상 현재 하중에 대해
+현재하중 이상의 하중을 가진 간선만 가지고 bfs
+
+ */
+public class Bj_1939 {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
+
+    static class Edge{
+        int end,weight;
+        public Edge(int end, int weight){
+            this.end = end;
+            this.weight = weight;
+        }
+    }
+
+    static int N;//정점의 수(1번부터 N번까지 존재)
+    static int M;//간선의 수
+
+    static ArrayList<Edge>[] vertexList;//정점 인접리스트
+
+    static int startV,endV;//출발정점, 도착정점
+    static int max = 0;//최대하중
+    public static void main(String[] args) throws IOException{
+        //N,M 세팅
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+
+
+        //정점 생성
+        vertexList = new ArrayList[N+1];
+        for(int i=1;i<=N;i++){
+            vertexList[i] = new ArrayList<>();
+        }
+
+        //간선 생성
+        for(int i=0;i<M;i++){
+            st = new StringTokenizer(br.readLine());
+            int s = Integer.parseInt(st.nextToken());
+            int e = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+
+            //양방향
+            vertexList[s].add(new Edge(e,w));
+            vertexList[e].add(new Edge(s,w));
+
+            max = Math.max(max,w);//최대하중 체크
+        }
+
+        //출발정점, 도착정점
+        st = new StringTokenizer(br.readLine());
+        startV = Integer.parseInt(st.nextToken());
+        endV = Integer.parseInt(st.nextToken());
+
+        System.out.println(binarySearch(1,max));
+    }
+
+    //최대하중 탐색
+    static int binarySearch(int low,int high){
+        int mid;
+        int res=0;
+        while(low<=high){
+            mid = low+(high-low)/2;
+            if(canGo(mid)){//mid가 최대하중일때 이동 가능한지 판단
+                res = mid;
+                low=mid+1;
+            }else{
+                high=mid-1;
+            }
+        }
+        return res;
+    }
+
+    //maxWeight가 최대하중일때 startV에서 endV까지 갈 수 있냐
+    static boolean canGo(int curWeight){
+        Queue<Integer> q = new ArrayDeque<>();
+        boolean[] visited = new boolean[N+1];
+
+        q.offer(startV);
+        visited[startV] = true;
+
+        while(!q.isEmpty()){
+            int cur = q.poll();//현재 노드 번호
+            if(cur==endV) return true;//endV에 도달하다
+
+            for(Edge edge:vertexList[cur]){//현재 노드의 간선들 탐색
+                if(visited[edge.end]) continue;//방문초과
+                if(edge.weight<curWeight) continue;//curWeight가 현재 간선의 하중을 초과
+
+                visited[edge.end] = true;
+                q.offer(edge.end);
+
+            }
+        }
+        return false;
+    }
+}
+```
+
+<br>
+<br>
+
+# **🔑Description**
+
+- 섬은 1번부터 시작
+
+  1. static class Edge(end, weight) 생성
+  2. 인접리스트로 노드간 연결 표현
+     - 하면서 최대하중(max) 확인
+  3. 최소하중(1) ~ 최대하중(max)까지 binarySearch하면서 통과 확인
+     - 통과하면 mid+1 ~ right 까지 binarySearch
+     - 통과 못하면 left~mid-1 binarySearch
+     - 통과확인 startNode에서 binarySearch상 현재 하중에 대해 현재하중 이상의 하중을 가진 간선만 가지고 bfs
+
+- 
+
+  ---
+
+  
+
+  
+
+<br>
+<br>
+
+# **📑Related Issues**
+
+> if(edge.weight<curWeight) continue;//curWeight가 현재 간선의 하중을 초과 
+>
+> 
+>
+> 다리의하중이 현재무게보다 낮으면 continue 해야하는데 반대로 표기하였음 
+>
+> 원인: 변수명의 모호함, 풀이를 외워서
+
+<br>
+<br>
+
+# **🕛Resource**
+
+| Memory  | Time  | Implementation Time |
+| ------- | ----- | ------------------- |
+| 61696KB | 624ms |                     |
+
