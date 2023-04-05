@@ -24,6 +24,7 @@ jobs:
         run: |
           git config --global user.email $GIT_EMAIL
           git config --global user.name $GIT_NAME
-          git fetch origin main
+          git fetch
+          git pull
           git merge origin/main --allow-unrelated-histories
           git push
