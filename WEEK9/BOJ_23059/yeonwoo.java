@@ -1,106 +1,112 @@
 import java.io.*;
 import java.util.*;
 
-/* Topological Sort
+/*
+위상정렬
+    싸이클이 없고, 유향그래프
 
-#topological sort 재료
-- 인접리스트로 만든 그래프
-    Map<String,ArrayList<String>>
-- 노드별 차수
-    Map<String,Integer>
+인접리스트로 그래프 표현
+정점별 innerDegreeTable 생성
 
-#문제에만 특별히 적용되는 부분
-- 동일위상 노드에 대해 사전순정렬
-    queue 대신 priorityQueue로 극복
-        조건1. 위상 오름차순
-        조건2. String 오름차순
-
-
-1.
+q에 innerDegree가 0인 애들 추가
+bfs탐색 -
+    cur의 인접 정점에 대하여 innerDegree를 1씩 줄이고, 0이면 q에 넣는다
  */
-
 public class Main{
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static HashMap<String,ArrayList<String>> map = new HashMap<>();
-    static HashMap<String,Integer> indegree = new HashMap<>();
-
     static int N;
+    static HashMap<String, ArrayList<String>> map = new HashMap<>();
+    static HashMap<String,Integer> innerDegree = new HashMap<>();
 
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     public static void main(String[] args) throws IOException{
-        N = Integer.parseInt(br.readLine());//관계 갯수
-
-        //그래프, inner차수 계산
+        StringTokenizer st;
+        N = Integer.parseInt(br.readLine());
         for(int i=0;i<N;i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            String lowItem = st.nextToken();
-            String highItem = st.nextToken();
+            st = new StringTokenizer(br.readLine()," ");
+            String low = st.nextToken();//하위템
+            String high = st.nextToken();//상위템
 
-            //그래프
-            map.putIfAbsent(lowItem,new ArrayList<>());
-            map.putIfAbsent(highItem,new ArrayList<>());
-            map.get(lowItem).add(highItem);
+            //그래프에 없으면 넣는다
+            map.putIfAbsent(low,new ArrayList<>());
+            map.putIfAbsent(high,new ArrayList<>());
+            //하위템의 인접 정점으로 상위템 등록
+            map.get(low).add(high);
 
-            //차수
-            indegree.putIfAbsent(lowItem,0);
-            indegree.putIfAbsent(highItem,0);
 
-            //상위템 차수 증가
-            indegree.put(highItem,indegree.get(highItem)+1);
+            //innerDegree setting
+            innerDegree.putIfAbsent(low,0);
+            innerDegree.putIfAbsent(high,0);
+            //상위템의 innerDegree ++
+            int curHighInnerDegree = innerDegree.get(high);
+            innerDegree.put(high,curHighInnerDegree+1);
         }
 
-        //시작노드 입력
-        topologicalSort();
-
+        bfs();
     }
-    static void topologicalSort(){
-        Queue<Node> q = new ArrayDeque<>();//BFS를 위한 큐
-        PriorityQueue<Node> result = new PriorityQueue<>();//결과를 저장할 우선순위 큐
+    static void bfs() throws IOException{
+        Queue<Item> q = new ArrayDeque<>();//bfs용 큐
+        PriorityQueue<Item> pq = new PriorityQueue<>();//출력우선순위 고려
 
-        //초기 진입차수가 0인 노드를 큐에 삽입
-        for(String key:indegree.keySet()){
-            int curDegree = indegree.get(key);
-            if(curDegree==0) q.offer(new Node(key,0));
+        //애초에 innerDegree가 0인애들을 q에 넣는다
+        for(String itemName:innerDegree.keySet()){
+            int curItemInnerDegree = innerDegree.get(itemName);
+            if(curItemInnerDegree==0){
+                q.offer(new Item(itemName,curItemInnerDegree));
+            }
         }
 
         while(!q.isEmpty()){
-            Node cur = q.poll();
-            result.offer(cur);//Node cur에는 priority가 반영되어있음
+            Item cur = q.poll();
+            pq.offer(cur);//출력용 pq에 넣기
 
-            //cur의 인접 노드 차수 감소, 0이면 큐에 삽입
-            for(String key:map.get(cur.key)){
-                indegree.put(key,indegree.get(key)-1);
-                if(indegree.get(key)==0){
-                    q.offer(new Node(key,cur.priority+1));//출력우선순위를 여기서 올려준다
+            for(String nextItemName:map.get(cur.name)){
+                //cur의 인접정점 탐색
+
+                int nextItemInnerDegree = innerDegree.get(nextItemName);
+                //차수 1씩 줄인다
+                innerDegree.put(nextItemName,nextItemInnerDegree-1);
+                //0이면 q에 넣는다
+                if(innerDegree.get(nextItemName)==0){
+                    q.offer(new Item(nextItemName,cur.priority+1));
                 }
-
             }
         }
-
-        if(result.size() != map.size()){
+        /*사이클이 있다면 사이클 시작지점에서 degree가 0이되지 않는 문제 발생한다
+        사이클 시작지점의 innerDegree가 2번 계산되기 때문이다
+        그 결과 q에 정점 공급이 끊기고
+        그 결과 pq의 크기가 map보다 작아지게된다(bfs가 멈추므로).
+         */
+        if(pq.size()<map.size()){
             System.out.println(-1);
             return;
         }
-        StringBuilder sb = new StringBuilder();
-        while(!result.isEmpty()){
-            sb.append(result.poll().key+"\n");
+        
+        //출력
+        while(!pq.isEmpty()){
+            bw.write(pq.poll().name+"\n");
         }
-        System.out.println(sb.toString());
+        bw.close();//close하면 자동 flush됨
     }
 
-    static class Node implements Comparable<Node>{
-        String key;
-        int priority;
-
-        public Node(String key, int degree){
-            this.key = key;
-            this.priority = degree;
+    static class Item implements Comparable<Item>{
+        String name;//아이템명
+        int priority;//출력우선순위
+        public Item(String name, int priority){
+            this.name = name;
+            this.priority = priority;
         }
 
-        public int compareTo(Node o){
+        public int compareTo(Item o){
+            //기본적으로 출력우선순위 순
             if(priority==o.priority){
-                return key.compareTo(o.key);
+                //출력우선순위가 같으면 이름 기준 오름차순
+                return name.compareTo(o.name);
             }
+            
             return priority-o.priority;
         }
+
     }
+
 }
