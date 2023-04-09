@@ -9,7 +9,105 @@
 
 # **Code**
 
+* 로직 수정 후 두번째 풀이
 ```java
+// 두번째 풀이 (로직 수정)
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Main {
+
+    static int N, L, cnt;
+    static int[][] board;
+    static boolean[] vis;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken()); // 행 수
+        L = Integer.parseInt(st.nextToken()); // 경사로를 설치하는데 필요한 길의 수
+        vis = new boolean[N];
+        board = new int[N][N];
+
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < N; j++) {
+                board[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        checkPath();
+        board = rotate(board); // 90도 반시계 회전
+        checkPath();
+        System.out.println(cnt); // 가능한 길의 수(정답) 출력
+
+    }
+
+    private static void checkPath() {
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(vis, false);
+            int[] road = board[i];
+
+            int p1 = 0;
+            loop:
+            while (p1 < N - 1) {
+                int p2 = p1 + 1;
+                if (Math.abs(road[p2]- road[p1]) >=2) break; // 차이가 2 이상일 경우 불가능 (종료)
+                if (road[p2] == road[p1]+1) { // 올라가는 경사일 경우
+                    int height = road[p1]; // 확인할 경사로 높이
+                    for (int j = 0; j < L; j++) {
+                        // 범위를 넘어서거나, 이미 경사로를 놓은적 있거나, 필요한 경사로 높이가 아닌 경우 불가능 (종료)
+                        if (p1-j<0 || vis[p1-j] || road[p1-j] != height) break loop;
+                    }
+                    // 가능할 경우 올라가는 경사로 놓기
+                    for (int j = 0; j < L; j++) {
+                        vis[p1-j] = true;
+                    }
+
+                } else if (road[p2] == road[p1]-1) { // 내려가는 경사일 경우
+                    int height = road[p1]-1; // 확인할 경사로 높이
+                    for (int j = 1; j <= L; j++) {
+                        // 범위를 넘어서거나, 필요한 경사로 높이가 아닌 경우 불가능(종료)
+                        if (p1+j >= N || road[p1+j] != height) break loop;
+                    }
+                    // 내려가는 경사로 놓기
+                    for (int j = 1; j <= L; j++) {
+                        vis[p1+j] = true;
+                    }
+                    // p2를 경사로 끝까지 이동시키기
+                    p2 = p1 + L;
+                }
+                p1 = p2;
+
+            }
+
+            if (p1 == N-1) cnt++; // p1 포인터가 끝까지 도달했을 경우 가능한 길이므로 cnt +1
+        }
+    }
+
+    private static int[][] rotate(int[][] board) {
+        int[][] newBoard = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                newBoard[i][j] = board[j][N - 1 - i];
+            }
+        }
+        return newBoard;
+    }
+
+}
+
+
+```
+
+
+
+* 첫번 째 풀이
+```java
+// 첫번째 풀이
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
@@ -105,6 +203,7 @@ public class Main {
 
 ```
 
+
 <br>
 <br>
 
@@ -116,22 +215,29 @@ public class Main {
 <aside>
 💡 설계 아이디어
 
-      - p1(기준점), p2(기준점을 중심으로 이동) 포인터 두기
-      - p1, p2 지형 차이가 1이하일 경우에만 가능한 길인지 탐색
-      - p1 포인터가 행의 끝까지 올 경우(모든 경우 탐색했는데 불가능해서 종료되지 않은 경우) 가능한 길로 카운트
-      - p1, p2 지형 차이에 따라서 동작 수행
-          - p1<p2
-              - bigCnt++
-          - p1==p2
-              - 중간에 323, 343식으로 불가능한 경우가 있는지 확인
-              - curCnt++
-          - p1>p2
-              - smallCnt++
-      - 올라가는 경사로가 필요할 경우(bigCnt>0)
-          - curCnt 확인 후 경사로 가능한지 확인.
-          - p1, p2 이동. cnt 갱신
-      - 내려가는 경사로가 가능할 경우(smallCnt==L)
-          - p1, p2 이동. cnt 갱신.
+        <수정 후 풀이>
+            1. 길을 통과할 수 있는지는 한 쪽 방향에서만 확인하면 된다.
+            2. 한 방향으로만 이동하면서 경사로를 놓으면서 끝에 도착할 수 있는지 확인한다
+            3. 내려가는 경사일 때는 앞으로 L칸 만큼 같은 높이인지 확인하면 된다.
+            4. 올라가는 경사일 때는 현재 칸부터 뒤로 L칸 만큼 같은 높이이고 이전에 경사로를 설치한 곳이 없는지 확인하면 된다.
+        
+        <첫번째 풀이>
+          - p1(기준점), p2(기준점을 중심으로 이동) 포인터 두기
+          - p1, p2 지형 차이가 1이하일 경우에만 가능한 길인지 탐색
+          - p1 포인터가 행의 끝까지 올 경우(모든 경우 탐색했는데 불가능해서 종료되지 않은 경우) 가능한 길로 카운트
+          - p1, p2 지형 차이에 따라서 동작 수행
+              - p1<p2
+                  - bigCnt++
+              - p1==p2
+                  - 중간에 323, 343식으로 불가능한 경우가 있는지 확인
+                  - curCnt++
+              - p1>p2
+                  - smallCnt++
+          - 올라가는 경사로가 필요할 경우(bigCnt>0)
+              - curCnt 확인 후 경사로 가능한지 확인.
+              - p1, p2 이동. cnt 갱신
+          - 내려가는 경사로가 가능할 경우(smallCnt==L)
+              - p1, p2 이동. cnt 갱신.
 
 </aside>
 
@@ -156,4 +262,4 @@ public class Main {
 
 | Memory | Time  | Implementation Time |
 | -- |-------|---------------------|
-| 15216KB | 152ms | 2 Hour  |
+| 15084KB | 148ms | 2 Hour  |
