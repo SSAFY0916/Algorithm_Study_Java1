@@ -2,7 +2,7 @@
 
 # **🔒Problem**
 
-> [BOJ 2157_여행](https://www.acmicpc.net/problem/5972)
+> [BOJ 2157_여행](https://www.acmicpc.net/problem/2157)
 
 <br>
 <br>
@@ -144,4 +144,4 @@ public class Main {
 
 | Memory | Time  | Implementation Time |
 | -- |-------|---------------------|
-| 59096KB | 588ms | 2 Hour  |
+| 43016KB | 468ms | 2 Hour  |
