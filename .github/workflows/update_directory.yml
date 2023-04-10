@@ -1,0 +1,29 @@
+name: Update Directory Structure
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  update:
+    strategy:
+      fail-fast: false
+      matrix:
+        update_branch: [cheolsoon, dajeong, jeonghoon, jiseung, mina, yeonwoo]
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, '폴더') && contains(github.event.head_commit.message, '구조')  }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ matrix.update_branch }}
+      - name: Merge updates
+        env:
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+          GIT_NAME: ${{ secrets.GIT_NAME }}
+        run: |
+          git config --global user.email $GIT_EMAIL
+          git config --global user.name $GIT_NAME
+          git fetch origin main
+          git merge origin/main --allow-unrelated-histories
+          git push
