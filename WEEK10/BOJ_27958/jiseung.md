@@ -1,94 +1,123 @@
-![header](https://capsule-render.vercel.app/api?type=waving&height=200&color=0:B2E6FF,100:FFB2D6&text=BOJ%2011657&fontColor=FFFFFF&fontAlign=80&fontAlignY=35&fontSize=50)
+![header](https://capsule-render.vercel.app/api?type=waving&height=200&color=0:B2E6FF,100:FFB2D6&text=BOJ%2027958&fontColor=FFFFFF&fontAlign=80&fontAlignY=35&fontSize=50)
 
 # **🔒Problem**
 
-> BOJ 11657 타임머신
+> BOJ 27958 사격 연습
 
 # 💻**Code**
 
 ```java
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.*;
 
 public class Main {
 
+    static int n, k, answer;
+    static int[] perm, powers;
+    static int[][] board;
+    static int[] dr = {-1, 0, 1, 0};
+    static int[] dc = {0, -1, 0, 1};
+
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        int[][] edges = new int[m][3]; // 간선들의 리스트
-        for (int i = 0; i < m; i++) {
+        StringTokenizer st;
+        n = Integer.parseInt(br.readLine());
+        k = Integer.parseInt(br.readLine());
+        board = new int[n][n]; // 보드 판
+        for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < 3; j++) {
-                edges[i][j] = Integer.parseInt(st.nextToken());
+            for (int j = 0; j < n; j++) {
+                board[i][j] = Integer.parseInt(st.nextToken());
             }
+        }
+        powers = new int[k]; // 총알의 공격력
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < k; i++) {
+            powers[i] = Integer.parseInt(st.nextToken());
         }
 
-        int[] dists = new int[n+1];  // 각 노드까지의 거리 배열
-        int inf = (n - 1) * 10000 + 1; // 최대 n-1번의 간선을 거칠 수 있으므로 거리의 절대값이 inf보다 클 수 없다
-        Arrays.fill(dists, inf);
-        dists[1] = 0; // 출발 노드는 거리를 0으로 함
-        boolean flag = true;
-        for (int i = 0; i < n - 1; i++) { // n-1번 반복
-            for (int j = 0; j < m; j++) { // 모든 간선에 대하여 반복
-                if (dists[edges[j][0]] == inf) { // 출발노드를 아직 방문한적이 없으면 건너뜀
-                    continue;
-                }
-                dists[edges[j][1]] = Math.min(dists[edges[j][1]], dists[edges[j][0]] + edges[j][2]); // 이번 간선을 사용했을 때의 거리로 갱신
-                if (dists[edges[j][1]] <= -inf) { // -inf보다 작거나 같아지면 음의 사이클이 있는 것이므로 flag 갱신
-                    flag = false;
-                }
-            }
-        }
-        for (int j = 0; j < m; j++) { // 모든 간선에 대하여 한 번 더 반복해서 음의 사이클 조사
-            if (dists[edges[j][0]] == inf) {// 출발노드를 아직 방문한적이 없으면 건너뜀
-                continue;
-            }
-            if (dists[edges[j][1]] > dists[edges[j][0]] + edges[j][2]) { // 아직도 갱신이 가능하다면 음의 사이클이 존재
-                flag = false;
-                break;
-            }
-        }
-        if (flag) { // 음의 사이클 존재X
-            for (int i = 2; i <= n; i++) {
-                if (dists[i] == inf) { // 도달 불가능
-                    bw.write(-1 + "\n");
-                }else { // 도달 가능
-                    bw.write(dists[i] + "\n");
-                }
-            }
-        }else { // 음의 사이클 존재
-            bw.write(-1 + "\n");
-        }
+        perm = new int[k];
+        permutation(0);
+        bw.write(answer + "\n");
         bw.flush();
         bw.close();
         br.close();
+    }
+
+    // k개의 총알을 어느 행으로 쏠지 결정하는 중복순열
+    static void permutation(int count) {
+        if (count == k) {
+            answer = Math.max(answer, simulate());
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            perm[count] = i;
+            permutation(count + 1);
+        }
+    }
+
+    static int simulate() {
+        int ret = 0; // 점수
+        int[][] temp = new int[n][n]; // 보드판을 복사해서 표적들의 체력을 저장
+        int[][] scores = new int[n][n]; // 보드판을 복사해서 표적들의 점수를 저장
+        for (int i = 0; i < n; i++) {
+            temp[i] = Arrays.copyOf(board[i], n);
+            scores[i] = Arrays.copyOf(board[i], n);
+        }
+        for (int i = 0; i < k; i++) { // i번째 총알은 perm[i] 행에 발사
+            for (int j = 0; j < n; j++) {
+                if (temp[perm[i]][j] <= 0) { // 빈칸이면 건너뜀
+                    continue;
+                }
+                if (temp[perm[i]][j] >= 10) { // 보너스 표적
+                    ret += scores[perm[i]][j]; // 점수 획득
+                    temp[perm[i]][j] = 0; // 표적 삭제
+                    scores[perm[i]][j] = 0; // 점수 삭제
+                }else { // 일반 표적
+                    temp[perm[i]][j] -= powers[i]; // 총알의 공격력만큼 표적의 체력 감소
+                    if (temp[perm[i]][j] <= 0) { // 표적이 사라짐
+                        ret += scores[perm[i]][j]; // 점수 획득
+                        if (scores[perm[i]][j] >= 4) { // 기존의 표적의 체력이 4 이상이라 새로운 표적이 생성될 때
+                            for (int l = 0; l < 4; l++) {
+                                int newr = perm[i] + dr[l];
+                                int newc = j + dc[l];
+                                if (newr < 0 || newr >= n || newc < 0 || newc >= n) {
+                                    continue;
+                                }
+                                if (temp[newr][newc] > 0) {
+                                    continue;
+                                }
+                                temp[newr][newc] = scores[perm[i]][j] / 4; // 새로운 표적 생성
+                                scores[newr][newc] = scores[perm[i]][j] / 4; // 새로운 점수 지정
+                            }
+                        }
+                        temp[perm[i]][j] = 0; // 표적 삭제
+                        scores[perm[i]][j] = 0; // 점수 삭제
+                    }
+                }
+                break; // 이번 행에서 총알이 표적을 만났으니까 break하고 다음 총알로 넘어가기
+            }
+        }
+        return ret;
     }
 }
 ```
 
 # **🔑Description**
 
-> 문제를 읽고 음의 가중치가 있는 것, 음의 사이클을 조사해야 되는 것을 보고 벨만포드 알고리즘을 떠올렸다.\
-> 노드의 개수 -1 번 동안 반복하면서 모든 간선에 대하여 이번 간선을 사용했을 때 비용이 더 작아지는지 검사했다.\
-> 그리고 마지막으로 모든 간선에 대하여 한 번 더 비용이 작아지는지 검사해서 음의 사이클을 찾았다.
+> 총알이 최대 5개, 쏠 수 있는 행의 개수가 최대 8개라서 8^5개의 총을 쏘는 행의 중복순열을 만들어서 시뮬레이션을 돌렸다\
+> 총알의 개수만큼 총알을 쏠 행의 번호가 정해지면 표적을 만날때 까지 왼쪽에서 부터 오른쪽으로 탐색했다.\
+> 보너스 표적을 만나면 점수를 얻고 표적을 삭제했고\
+> 일반 표적을 만나면 체력을 줄이고 표적의 체력이 0 이하가 되면 삭제하고 기존의 체력이 4 이상이었으면 새로운 표적들을 만들었다.\
+> 표적의 체력과 표적의 점수를 모두 가지고 있어야 해서 배열을 두 개 만들어 사용했다.
 
 # **📑Related Issues**
 
-> n개의 노드가 있을 때, 최단 거리 경로는 최대 n-1개의 간선을 포함하니까 n-1번 반복하고 n번째에서 음의 사이클을 검사해야되는데\
-> n번 반복하고 n+1번째에서 음의 사이클을 검사했었다.\
-> 또한 항상 더 작은 값만 저장해서 n-1번의 반복 안에서 이미 사이클이 발생해서 integer 음의 범위 밖으로 거리가 갱신되는 것을\
-> 저장하지 못해서 음의 사이클을 찾지 못했었다.\
-> 500 *6000 *10000도 long 범위니까 아예 dists배열을 long으로 선언하던가 n-1번의 반복안에서 범위밖의 값으로 넘어가는지 검사를 했었으면 더 좋았을 것 같다.\
-> 비슷한 문제로 [웜홀](https://www.acmicpc.net/problem/1865)이 있다.
+> 중복순열을 perm라는 배열에 저장해두었는데 매번 perm[i] 하기 귀찮아서 foreach문 사용했다가 i가 필요해서 다시 그냥 for문으로 바꾸는 과정에서 perm[i]로 수정하지 않은 부분이 있어서 틀렸었다.
 
 # **🕛Resource**
 
 | Memory    | Time    |
 | --------- | ------- |
-| 19164`KB` | 280`ms` |
+| 69964`KB` | 284`ms` |
