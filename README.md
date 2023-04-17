@@ -49,6 +49,7 @@ WEEK1 / BOJ_9999 / name
 | WEEK8    | [달이 차오른다, 가자.](https://www.acmicpc.net/problem/1194) | [동전 퍼즐](https://www.acmicpc.net/problem/27921)         | [퍼즐](https://www.acmicpc.net/problem/1525)                 | [나만 안되는 연애](https://www.acmicpc.net/problem/14621) | [구간 곱 구하기](https://www.acmicpc.net/problem/11505)  |                                                   |
 | WEEK9    | [중량제한](https://www.acmicpc.net/problem/1939)             | [리그 오브 레게노](https://www.acmicpc.net/problem/23059)  | [열쇠](https://www.acmicpc.net/problem/9328)                 | [경사로](https://www.acmicpc.net/problem/14890)           | [여행](https://www.acmicpc.net/problem/2157)             | [택배 배송](https://www.acmicpc.net/problem/5972) |
 | WEEK10   | [타임머신](https://www.acmicpc.net/problem/11657)            | [사격 연습](https://www.acmicpc.net/problem/27958)         | [구슬 탈출 2](https://www.acmicpc.net/problem/13460)         | [배열 돌리기 6](https://www.acmicpc.net/problem/20327)    | [고냥이](https://www.acmicpc.net/problem/16472)          | [이사](https://www.acmicpc.net/problem/17371)     |
+| WEEK11   | [너 봄에는 캡사이신이 맛있단다](https://www.acmicpc.net/problem/15824) | [거울 설치](https://www.acmicpc.net/problem/2151)          | [달빛 여우](https://www.acmicpc.net/problem/16118)           | [합이 0](https://www.acmicpc.net/problem/3151)            |                                                          |                                                   |
 
 ### Git 순서
 
