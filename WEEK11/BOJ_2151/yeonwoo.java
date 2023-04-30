@@ -6,7 +6,11 @@ import java.util.Queue;
 
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+<<<<<<< HEAD
 
+=======
+    //tt
+>>>>>>> 9034dd49021b68c464ceca06723683f943600bac
     //이차원맵
     static int N;
     static char[][] map;
