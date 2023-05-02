@@ -51,6 +51,7 @@ WEEK1 / BOJ_9999 / name
 | WEEK10   | [타임머신](https://www.acmicpc.net/problem/11657)            | [사격 연습](https://www.acmicpc.net/problem/27958)         | [구슬 탈출 2](https://www.acmicpc.net/problem/13460)         | [배열 돌리기 6](https://www.acmicpc.net/problem/20327)       | [고냥이](https://www.acmicpc.net/problem/16472)          | [이사](https://www.acmicpc.net/problem/17371)     |
 | WEEK11   | [너 봄에는 캡사이신이 맛있단다](https://www.acmicpc.net/problem/15824) | [거울 설치](https://www.acmicpc.net/problem/2151)          | [달빛 여우](https://www.acmicpc.net/problem/16118)           | [합이 0](https://www.acmicpc.net/problem/3151)               |                                                          |                                                   |
 | WEEK12   | [자리배정](https://www.acmicpc.net/problem/10157)            | [좋다](https://www.acmicpc.net/problem/1253)               | [전화번호 목록](https://www.acmicpc.net/problem/5052)        | [병아리의 변신은 무죄](https://www.acmicpc.net/problem/16467) |                                                          |                                                   |
+| WEEK13   | [문자열 지옥에 빠진 호석](https://www.acmicpc.net/problem/20166) | [마피아](https://www.acmicpc.net/problem/1079)             | [커피숍2](https://www.acmicpc.net/problem/1275)              | [친구비](https://www.acmicpc.net/problem/16562)              |                                                          |                                                   |
 
 ### Git 순서
 
