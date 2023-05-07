@@ -42,7 +42,7 @@ class Main {
             int x = Integer.parseInt(st.nextToken()) - 1;
             int y = Integer.parseInt(st.nextToken()) - 1;
             int a = Integer.parseInt(st.nextToken()) - 1;
-            long b = Long.parseLong(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
             if (x > y) {
                 int temp = x;
                 x = y;
@@ -126,4 +126,4 @@ class Main {
 
 | Memory | Time  | Implementation Time |
 | -- |-------|---------------------|
-| 78116KB | 904ms |  |
+| 78116KB | 852s |  |
