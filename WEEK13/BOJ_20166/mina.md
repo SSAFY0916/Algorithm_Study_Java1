@@ -83,7 +83,7 @@ public class Main {
     static void recur(int depth, String beloved, int x, int y, String ret) {
         if (world[x][y] == beloved.charAt(depth)) { // 선택한 좌표의 알파벳이 문자열의 depth위치의 알파벳이랑 일치함
             ret += Integer.toString(x * M + y) + ",";   // 좌표값의 인덱스값 ret에 이어 붙임
-        } else {    // 선택한 알파벳이 문자열의 depth위치의 알파벳이랑 일치함
+        } else {    // 선택한 알파벳이 문자열의 depth위치의 알파벳이랑 일치하지 않음
             return;
         }
 
